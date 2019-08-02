@@ -19,11 +19,11 @@ VIC is a bioinformatics software tool for assessing clinical impacts of somatic 
 
 ## OPTIONS
 
-To see the help menu, use the program as "java -jar VIC/target/VIC-1.0-jar-with-dependencies.jar --help":
+To see the help menu, use the program as "java -jar target/VIC-1.0-jar-with-dependencies.jar --help":
 
 Notice: Your command of VIC is [--help]
 
-usage: java -jar VIC/target/VIC-1.0-jar-with-dependencies.jar [-b ] [-d ] [-h] [-input_type ] [-i ] [-cancer_type ] [-convert2annovar ] [-l ] [-skip_annovar] [-o ] [-annotate_variation ] [-table_annovar ] [-s ] [-otherinfo ] [-db ]
+usage: java -jar target/VIC-1.0-jar-with-dependencies.jar [-b ] [-d ] [-h] [-input_type ] [-i ] [-cancer_type ] [-convert2annovar ] [-l ] [-skip_annovar] [-o ] [-annotate_variation ] [-table_annovar ] [-s ] [-otherinfo ] [-db ]
 
 -annotate_variation The Annovar perl script of annotate_variation.pl
 
@@ -57,7 +57,7 @@ usage: java -jar VIC/target/VIC-1.0-jar-with-dependencies.jar [-b ] [-d ] [-h] [
 
 ## EXAMPLE
 
-java -jar VIC/target/VIC-1.0-jar-with-dependencies.jar -annotate_variation /path/to/annotate_variation.pl -b hg19 -convert2annovar /path/to/convert2annovar.pl
+java -jar target/VIC-1.0-jar-with-dependencies.jar -annotate_variation /path/to/annotate_variation.pl -b hg19 -convert2annovar /path/to/convert2annovar.pl
 
 -table_annovar /path/to/table_annovar.pl -d /path/to/annovar/humandb -db /path/to/vicdb -i inputfile.avinput -input_type AVinput -o outputfile
 
@@ -67,7 +67,7 @@ VIC is a bioinformatics software tool for the interpretation of sequence variant
 
 ## LICENSE
 
-CancerVar is free for non-commercial use without warranty. Users need to obtain licenses such as OMIM and ANNOVAR by themselves. Please contact the authors for commercial use.
+VIC is free for non-commercial use without warranty. Users need to obtain licenses such as OMIM and ANNOVAR by themselves. Please contact the authors for commercial use.
 
 ## REFERENCE
 
