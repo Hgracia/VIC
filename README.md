@@ -5,7 +5,7 @@ To see the help menu, use the program as "java -jar VIC/target/VIC-1.0-jar-with-
 
 Notice: Your command of VIC is [--help]
 
-usage: java -jar VIC.jar [-b ] [-d ] [-h] [-input_type ] [-i ] [-cancer_type ] [-convert2annovar ] [-l ] [-skip_annovar] [-o ] [-annotate_variation ] [-table_annovar ] [-s ] [-otherinfo ] [-db ]
+usage: java -jar VIC-1.0-jar-with-dependencies.jar [-b ] [-d ] [-h] [-input_type ] [-i ] [-cancer_type ] [-convert2annovar ] [-l ] [-skip_annovar] [-o ] [-annotate_variation ] [-table_annovar ] [-s ] [-otherinfo ] [-db ]
 
 -annotate_variation The Annovar perl script of annotate_variation.pl
 
