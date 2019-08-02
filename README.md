@@ -14,8 +14,7 @@ VIC is a bioinformatics software tool for assessing clinical impacts of somatic 
 
 1. You need to install Java >= 1.8.
 2. You need to install [ANNOVAR] (http://annovar.openbioinformatics.org/en/latest/) version >=  2016-02-01.
-3. You need to download other files such as mim2gene.txt from [OMIM] (http://www.omim.org/downloads).
-4. Please use the latest version of the files from OMIM, updated files could generate more accurate results while using VIC.
+3. You need to download the latest version of the files such as mim2gene.txt from [OMIM] (http://www.omim.org/downloads); updated files could generate more accurate results while using VIC.
 
 ## OPTIONS
 
