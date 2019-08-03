@@ -1,4 +1,4 @@
-# VIC
+# Variant Interpretation for Cancer (VIC)
 
 A Computational Tool for Assessing Clinical Impacts of Somatic Variants Following the AMP-ASCO-CAP 2017 Guidelines
 
@@ -70,7 +70,7 @@ VIC is free for non-commercial use without warranty. Users need to obtain licens
 
 ## REFERENCE
 
-He et al. VIC: A Computational Tool for Assessing Clinical Impacts of Somatic Variants Following the AMP-ASCO-CAP 2017 Guidelines. (Under Review)
+He et al. Variant Interpretation for Cancer (VIC): A Computational Tool for Assessing Clinical Impacts of Somatic Variants. (Under Review)
 
 [The  AMP/ASCO/CAP 2017 guidelines ] (https://www.ncbi.nlm.nih.gov/pubmed/27993330)
 Li MM, Datto M, Duncavage EJ, Kulkarni S, Lindeman NI, Roy S, Tsimberidou AM, Vnencak-Jones CL, Wolff DJ, Younes A, Nikiforova MN.
