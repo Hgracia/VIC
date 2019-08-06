@@ -29,7 +29,7 @@ public class VIC {
 
     protected static Map paras = new HashMap();
 
-    //some important datasets/lists
+    // some important datasets/lists
     protected static Map user_evidence_dict = new HashMap();
     protected static Map lof_genes_dict = new HashMap();
     protected static Map mim2gene_dict = new HashMap();
@@ -60,28 +60,29 @@ public class VIC {
      * @param args the command line arguments
      * @throws java.io.FileNotFoundException
      * @throws java.lang.InterruptedException
+     * @throws org.apache.commons.cli.ParseException
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException, ParseException, InterruptedException {
+    public static void main(String[] args) throws FileNotFoundException, IOException, ParseException,
+            InterruptedException {
 
         System.out.println("Notice: Your command of VIC is " + Arrays.toString(args));
 
         Options options = new Options();
 
-        //VIC 
+        // VIC 
         options.addOption("h", "help", false, "help message");
-//        options.addOption("", "help", false, "help message");
         options.addOption("b", "buildver", true, "The genomic build version, it can be hg19 and will support GRCh37 hg18 GRCh38 later");
         options.addOption("i", "inputfile", true, "--required argument: The input file contains your variant");
         options.addOption("o", "outputfile", true, "--required argument: The prefix of output file which contains the results, the file of results will be as [$$prefix].vic");
         options.addOption("input_type", true, "--required argument: The input file type, it can be  AVinput(Annovar's format),VCF(VCF with single sample), vcf_m(VCF with multiple samples)");
 
-        //VIC Other Options
+        // VIC Other Options
         options.addOption("db", "database_vic", true, "--required argument: <path>The  database location/dir for the VIC dataset file");
         options.addOption("s", "evidence_file", true, "User specified Evidence file for each variant");
         options.addOption("l", "user_specified_list", true, "User specified variant list with self-designated clinical impact significance, must be in AVinput format");
         options.addOption("cancer_type", true, "Please check the 'vic.cancer.types' in vicdb for available cancer types. All the cancer types should be in the shout-cut form, e.g.:AA. Or include cancer types in the otherinfo column of the AVinput");
 
-        //Annovar Options,Caution: check these options from manual of Annovar
+        // Annovar Options, Caution: check these options from manual of Annovar
         options.addOption("table_annovar", true, "<path>The Annovar perl script of table_annovar.pl");
         options.addOption("convert2annovar", true, "<path>The Annovar perl script of convert2annovar.pl");
         options.addOption("annotate_variation", true, "<path>The Annovar perl script of annotate_variation.pl");
@@ -94,7 +95,6 @@ public class VIC {
 
 //        System.out.println(Arrays.toString(args));
         if (Arrays.toString(args).equals("[]")) {
-//            System.out.println("---help");
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("java -jar VIC.jar", options, true);
             System.exit(0);
@@ -104,11 +104,12 @@ public class VIC {
         CommandLine option = parser.parse(options, args);
 
 //        System.out.println(options.toString());
-//        if (options.hasOption("") ){
+//        if (options.hasOption("")) {
 //            HelpFormatter formatter = new HelpFormatter();
 //            formatter.printHelp("java -jar VIC.jar", options, true);
 //            System.exit(0);
 //        }
+//
         if (option.hasOption("h")) {
             HelpFormatter formatter = new HelpFormatter();
             formatter.printHelp("java -jar VIC.jar", options, true);
@@ -186,7 +187,7 @@ public class VIC {
 
         exclude_snps = exclude_snps + "." + buildver;
 
-        //20180907
+        // 09072018
         if (option.hasOption("s")) {
             evidencefile = option.getOptionValue("s");
             File evidence_file = new File(evidencefile);
@@ -203,7 +204,7 @@ public class VIC {
                         if (cls2.length > 1) {
                             String keys = cls2[0] + "_" + cls2[1] + "_" + cls2[2] + "_" + cls2[3];
                             keys = keys.replaceAll("(?i)chr", "");
-//                            System.out.println("====the evidence key is "+ keys);
+//                            System.out.println("====the evidence key is " + keys);
                             user_evidence_dict.put(keys, cls2[4].toUpperCase());
                         }
                     }
@@ -214,8 +215,8 @@ public class VIC {
         } else {
             evidencefile = " ";
         }
-        //20190314 by Muqing Yan
 
+        // 03142019 by Muqing Yan
         if (option.hasOption("l")) {
             knownlist = option.getOptionValue("l");
             File known_file = new File(knownlist);
@@ -233,7 +234,6 @@ public class VIC {
                         if (cls2.length > 1) {
                             String known_variant = cls2[0] + "#" + cls2[1] + "#" + cls2[2] + "#" + cls2[3] + "#" + cls2[4] + "#" + cls2[5];
                             known_variant = known_variant.replaceAll("(?i)chr", "");
-//                            user_evidence_dict.put(keys, cls2[4].toUpperCase());
                             known_list.add(known_variant);
                         }
                     }
@@ -312,7 +312,6 @@ public class VIC {
 
         Read_dataset();
 
-        int some_file_fail = 0;
         int out_annf = 0;
         int o1 = -1;
         if (outputfile.contains("/")) {
@@ -328,8 +327,6 @@ public class VIC {
 
         File output_path = new File(opath);
 
-        //File inputfile_path = new File(input_file.getAbsoluteFile().getParent());    
-        //System.out.println(input_file.getAbsoluteFile().getParent());
         String[] annovar_outfiles = output_path.list((File dir, String name) -> name.endsWith(buildver + "_multianno.txt") && name.startsWith(oname));
 
         for (String annovar_outfile : annovar_outfiles) {
@@ -347,16 +344,9 @@ public class VIC {
                 if (!"vcf_m".equals(inputtype.toLowerCase())) {
                     System.out.println("Notice: The VIC is finished, the output file is [ " + outfilename + " ]");
                 }
-//                else {
-//                    some_file_fail = some_file_fail + 1;
-//                    System.out.printf("Warning: The VIC seems not run correctly for your %d samples in the VCF, please check your inputs and options in configure file\n", some_file_fail);
-//                }
             }
         }
 
-//        outfilename = opath + oname + "." + buildver + "_multianno.txt";
-//        File outfile = new File(outfilename);
-//        File outputfile_path = new File(opath);
         if ("vcf_m".equals(inputtype.toLowerCase())) {
             System.out.println("Notice: The VIC for VCF with multiple samples is finished, the output files are as [ " + "annovar_outfile" + "<sample name>.vic ]:");
             sum_sample = 1;
@@ -364,9 +354,6 @@ public class VIC {
             for (String f1 : f) {
                 System.out.println(f1);
             }
-//            if (some_file_fail >= 1) {
-//                System.out.println(" Warning: The VIC seems not run correctly for your " + some_file_fail + " samples in the VCF, please check your inputs and options in configure file");
-//            }
         }
 
         if (out_annf == 0) {
@@ -376,11 +363,10 @@ public class VIC {
         }
 
         System.out.println("END!");
-
     }
 
     public static void Read_dataset() throws FileNotFoundException, IOException {
-        //0. read the user specified evidence file
+        // 0. read the user specified evidence file
         try {
             File evidence_file = new File(evidencefile);
             if (evidence_file.isFile()) {
@@ -394,7 +380,6 @@ public class VIC {
                             user_evidence_dict.put(keys, cls2[4].toUpperCase());
                         }
                     }
-
                 } catch (IOException e) {
 
                 }
@@ -403,7 +388,7 @@ public class VIC {
             System.out.println("!!Error:can't read the user sepcified evidence file" + evidencefile);
         }
 
-        //1.LOF gene list  
+        // 1.LOF gene list  
         try {
 
             File lof_gene = new File(lof_genes);
@@ -424,7 +409,7 @@ public class VIC {
             return;
         }
 
-//2.cgi_markers
+        // 2.cgi_markers
         try {
             String line2;
             File cgi_marker = new File(cgi_markers);
@@ -492,20 +477,17 @@ public class VIC {
                                     cgi_markers_dict.put(key, value);
                                     break;
                             }
-
                         }
-
                     }
                 }
                 reader_cgi_marker.close();
             }
-
         } catch (FileNotFoundException e) {
             System.out.println("!!Error: can\'t read the cgi_markers genes file " + cgi_markers);
             System.out.println("!!Error: Please download it from the source website");
         }
 
-        //3.add_markers from pmkb
+        // 3.add_markers from pmkb
         try {
             File add_marker = new File(add_markers);
             String line2;
@@ -538,14 +520,12 @@ public class VIC {
                         default_s = "";
                         value = linecount + "," + add_markers_dict.put(key, default_s);
                         add_markers_dict.put(key, value);
-
                     } else if (mut.toLowerCase().contains("rearrangement")) {
                         mut = "fus_" + gene;
                         key = mut;
                         default_s = "";
                         value = linecount + "," + add_markers_dict.put(key, default_s);
                         add_markers_dict.put(key, value);
-
                     } else if (mut.toLowerCase().contains("copy number ")) {
                         String[] mutt = mut.split("copy number ");
                         String muts = "cna_" + mutt[1];
@@ -553,7 +533,6 @@ public class VIC {
                         default_s = "";
                         value = linecount + "," + add_markers_dict.put(key, default_s);
                         add_markers_dict.put(key, value);
-
                     } else if (mut.toLowerCase().contains("exon(s)")) {
                         String[] str = mut.split("exon(s)  | ");
                         if (!mut.toLowerCase().contains(",")) {
@@ -564,7 +543,6 @@ public class VIC {
                             default_s = "  ";
                             value = linecount + "," + add_markers_dict.put(key, default_s);
                             add_markers_dict.put(key, value);
-
                         } else {
                             str = mut.replace(",", " ").replaceAll("  ", " ").split(" ");
                             int index1 = mut.lastIndexOf(",");
@@ -576,7 +554,7 @@ public class VIC {
                             default_s = "";
                             value = linecount + "," + add_markers_dict.put(key, default_s);
                             add_markers_dict.put(key, value);
-                            //System.out.println(value);
+//                            System.out.println(value);
                             for (int i = 1; i < str.length - 2; i++) {
                                 String pos = str[i];
                                 String muta = "exon_" + pos + "_" + mutb;
@@ -585,9 +563,7 @@ public class VIC {
                                 value = linecount + "," + add_markers_dict.put(key, default_s);
                                 add_markers_dict.put(key, value);
                             }
-
                         }
-
                     } else if (mut.toLowerCase().contains("codon(s)")) {
                         String[] str = mut.split("codon(s)  | ");
                         if (!mut.toLowerCase().contains(",")) {
@@ -598,7 +574,6 @@ public class VIC {
                             default_s = "  ";
                             value = linecount + "," + add_markers_dict.put(key, default_s);
                             add_markers_dict.put(key, value);
-
                         } else {
                             str = mut.replace(",", " ").replaceAll("  ", " ").split(" ");
                             int index1 = mut.lastIndexOf(",");
@@ -618,9 +593,7 @@ public class VIC {
                                 default_s = " ";
                                 value = linecount + "," + add_markers_dict.put(key, default_s);
                                 add_markers_dict.put(key, value);
-
                             }
-
                         }
                     } else {
                         key = gene + "_" + mut;
@@ -628,19 +601,17 @@ public class VIC {
                         value = linecount + "," + add_markers_dict.put(key, default_s);
                         add_markers_dict.put(key, value);
                     }
-
                 }
 
                 reader_add_marker.close();
             }
-
         } catch (FileNotFoundException e) {
             System.out.printf("!!Error: can\'t read the additional markers file %s", add_markers);
             System.out.println("!!Error: Please download it from the source website");
             System.exit(0);
         }
 
-        //4.civic_markers from civic// BY MQY
+        // 4.civic_markers from civic// BY MQY
         try {
             File civic_marker = new File(civic_markers);
             try (BufferedReader reader_civic_marker = new BufferedReader(new FileReader(civic_marker))) {
@@ -658,7 +629,6 @@ public class VIC {
 
                     }
                     linecount += 1;
-
                 }
                 reader_civic_marker.close();
             }
@@ -666,7 +636,7 @@ public class VIC {
 
         }
 
-//5.OMIM mim2gene.txt file
+        // 5.OMIM mim2gene.txt file
         try {
             File mim_2gene = new File(mim2gene);
 
@@ -679,7 +649,6 @@ public class VIC {
 
                     if (cls2.length > 4) {
                         cls0 = cls2[4];
-
                     } else {
                         cls0 = "";
                     }
@@ -700,35 +669,35 @@ public class VIC {
                 }
 
                 reader_mim2gene.close();
-
             }
 
         } catch (FileNotFoundException e) {
 
         }
 
-//6.read the user specified SNP list,the variants will pass the frequency check//???NO "ext.variants" file in the vicdb
+//        // 6.read the user specified SNP list,the variants will pass the frequency check//???NO "ext.variants" file in the vicdb
 //        File excludesnps = new File(exclude_snps);
 //        if (excludesnps.isFile()) {
 //            try {
-//                BufferedReader reader_excludesnp = new BufferedReader(new FileReader(excludesnps));
-//                String line2;
-//                while ((line2 = reader_excludesnp.readLine()) != null) {
-//                    String[] cls2 = line2.split("\t");
-//                    if (cls2.length > 1) {
-//                        String keys = cls2[0] + "_" + cls2[1] + "_" + cls2[2] + "_" + cls2[3];
-//                        key = keys.replaceAll("(?i)chr", "");
-//                        value = "1";
-//                        exclude_snps_dict.put(key, value);
+//                try (BufferedReader reader_excludesnp = new BufferedReader(new FileReader(excludesnps))) {
+//                    String line2;
+//                    while ((line2 = reader_excludesnp.readLine()) != null) {
+//                        String[] cls2 = line2.split("\t");
+//                        if (cls2.length > 1) {
+//                            String keys = cls2[0] + "_" + cls2[1] + "_" + cls2[2] + "_" + cls2[3];
+//                            key = keys.replaceAll("(?i)chr", "");
+//                            value = "1";
+//                            exclude_snps_dict.put(key, value);
+//                        }
 //                    }
 //                }
-//                reader_excludesnp.close();
 //
 //            } catch (IOException e) {
 //                System.out.printf("Error: can\\'t read the user specified SNP list file %s", exclude_snps);
 //            }
 //        }
-//7.knownGeneCanonical exon file  # caution the buildver, now it is hg19
+//
+        // 7. knownGeneCanonical exon file  # caution the buildver, now it is hg19
         try {
             File knowngene = new File(knowgenecanonical);
             try (BufferedReader reader_knowngene = new BufferedReader(new FileReader(knowngene))) {
@@ -754,7 +723,7 @@ public class VIC {
             System.exit(0);
         }
 
-//8.OMIM mim_pheno.txt file
+        // 8. OMIM mim_pheno.txt file
         try {
             File mimpheno = new File(mim_pheno);
             try (BufferedReader reader_mim_pheno = new BufferedReader(new FileReader(mimpheno))) {
@@ -776,7 +745,7 @@ public class VIC {
             System.exit(0);
         }
 
-//9.OMIM mim_orpha.txt file
+        // 9. OMIM mim_orpha.txt file
         try {
             File mimorpha = new File(mim_orpha);
             try (BufferedReader reader_mim_orpha = new BufferedReader(new FileReader(mimorpha))) {
@@ -797,7 +766,7 @@ public class VIC {
             System.exit(0);
         }
 
-//10.orpha.txt
+        // 10. orpha.txt
         try {
             File Orpha = new File(orpha);
             try (BufferedReader reader_orpha = new BufferedReader(new FileReader(Orpha))) {
@@ -816,7 +785,7 @@ public class VIC {
             System.exit(0);
         }
 
-//11.cancer_pathway=%(database_vic)s/cancer_pathway.list
+        // 11. cancer_pathway=%(database_vic)s/cancer_pathway.list
         try {
             File Cancerpathway = new File(cancer_pathway);
             try (BufferedReader reader_cancer_pathway = new BufferedReader(new FileReader(Cancerpathway))) {
@@ -835,7 +804,7 @@ public class VIC {
             System.exit(0);
         }
 
-//12.cancers_genes.list
+        // 12. cancers_genes.list
         try {
             File cancersgenes = new File(cancers_genes);
             try (BufferedReader reader_cancers_genes = new BufferedReader(new FileReader(cancersgenes))) {
@@ -855,7 +824,7 @@ public class VIC {
             System.exit(0);
         }
 
-//13.VIC.cancer.types
+        // 13. VIC.cancer.types
         try {
             File cancertype = new File(cancers_types);
             try (BufferedReader reader_cancertype = new BufferedReader(new FileReader(cancertype))) {
@@ -874,7 +843,6 @@ public class VIC {
             System.out.println("!!Error: Please download it from the source website");
             System.exit(0);
         }
-
     }
 
     public static void Check_Downdb() throws IOException, InterruptedException {
@@ -885,7 +853,8 @@ public class VIC {
         } else {
             System.out.printf("==Warning:the folder of %s is already created!\n", humandbpath);
         }
-//MY: updated to dbnsf35a,clinvar_20190305,gnomad211_exome
+
+        // MY: updated to dbnsf35a, clinvar_20190305, gnomad211_exome
         String ds = "refGene esp6500siv2_all 1000g2015aug avsnp150 dbnsfp35a clinvar_20190305 exac03 dbscsnv11 dbnsfp31a_interpro ensGene knownGene cosmic84_coding icgc21 gnomad211_exome";
         for (String dbs : ds.split(" ")) {
             String file_name = dbs;
@@ -915,7 +884,6 @@ public class VIC {
                 process.waitFor();
             }
         }
-
     }
 
     public static void Check_Input() throws IOException, InterruptedException {
@@ -939,7 +907,6 @@ public class VIC {
                 System.out.printf("!!Error: The Annovar file [ %s ] is not here,please download ANNOVAR firstly: http://www.openbioinformatics.org/annovar  \n ", convert_annovar);
                 System.exit(0);
             }
-
         }
 
         if (inputtype.toLowerCase().equals("vcf_m")) {
@@ -997,16 +964,14 @@ public class VIC {
                 String opath = outputfile.substring(0, o1 + 1);
                 if (opath.equals("")) {
                     opath = "./";
-                }   //            int o1 = outputfile.lastIndexOf("/");
-//            String oname = outputfile.substring(o1 + 1);
-//            String opath = outputfile.substring(0, o1 + 1);
-//            System.out.println("//////opath is "+ opath);
+                }
+
                 File output_path = new File(opath);
-                //            System.out.println(oname + " for vcf_m");
-//            File outfile = new File(outputfile);
-//            File outputfile_path = new File(outfile.getAbsoluteFile().getParent());
+//                System.out.println(oname + " for vcf_m");
+//                File outfile = new File(outputfile);
+//                File outputfile_path = new File(outfile.getAbsoluteFile().getParent());
                 String[] f = output_path.list((File dir, String name) -> name.endsWith(".avinput") && name.startsWith(oname));
-                //            System.out.println("======="+f[0]+"======");
+//                System.out.println("=======" + f[0] + "======");
                 for (String f1 : f) {
                     System.out.printf("INFO: Begin to annotate sample file of %s ....", f1);
                     String new_outfile = f1.replaceAll(".avinput", "");
@@ -1024,7 +989,7 @@ public class VIC {
         }
     }
 
-    //def check_genes(anvfile):
+    // def check_genes(anvfile):
     public static int Check_genes(String _anvfile) throws FileNotFoundException, IOException {
         int sum = 0;
         String grlfile = _anvfile + ".grl_p";
@@ -1044,8 +1009,8 @@ public class VIC {
                                 if (cls[i].toLowerCase().contains("otherinfo")) {
                                     otherinfo_pos = i;
                                 }
-                            }//for
-                        }//otherinfo=true
+                            } // for
+                        } // otherinfo = true
                         gene_name = cls[6];
                         if (cls[6].equals("Gene.refGene")) {
                             gene_name = "Gene";
@@ -1071,17 +1036,17 @@ public class VIC {
                                         } else if (i == o) {
                                             line_out = line_out + "\t" + cls[i] + "\t" + gg;
                                         }
-                                    }//else
-                                }//for
+                                    } // else
+                                } // for
                                 if (sum > 1) {
                                     line_out = line_out.replace("(?i)chr", "");
-                                }//if
+                                }
 
-                            }//else
+                            } // else
                             writer.write(line_out + "\t\n");
-                        }//for
-                    }//cls.length
-                }//while
+                        } // for
+                    } // cls.length
+                } // while
             }
             fh.close();
         } catch (IOException e) {
@@ -1094,33 +1059,33 @@ public class VIC {
 
     }
 
-    //def classfy(CBP, Allels_flgs, cls):
+    // def classfy(CBP, Allels_flgs, cls):
     public static String ClassFy(int[] CBP, Map Alleles_flgs, String[] cls) {
 
         String[] BPS = {"Strong clinical significance", "Potential clinical significance", "Benign/Likely benign", "Uncertain significance"};
         int BPS_out = 3;
-        /*
-        if (CBP[0] == 2 && CBP[3] == 1 && CBP[6] == 1 && CBP[7] == 2 && CBP[8] == 2 && CBP[9] == 2 && CBP[10] == 2) {
-            BPS_out = 0;
-        } else if (CBP[0] > 0 && CBP[3] > 0 && CBP[6] > 0 && CBP[7] == 2 && CBP[8] > 0 && CBP[9] == 2 && CBP[10] > 0) {
-            BPS_out = 1;
-        } else if (CBP[0] == 0 && CBP[3] == 0 && CBP[6] == 0 && CBP[7] == 0 && CBP[8] == 0 && CBP[9] == 0 && CBP[10] == 0) {
-            BPS_out = 3;
-        } else if (CBP[0] == 0 && CBP[3] == 0 && CBP[6] == 0 && CBP[7] >= 0 && CBP[8] >= 0 && CBP[9] <= 1 && CBP[10] == 0) {
-            BPS_out = 2;
-        }*/
- /*
-        if (CBP[0] == 2 && CBP[1] == 1 && CBP[4] == 1 && CBP[5] == 2 && CBP[6] == 2 && CBP[7] == 2 && CBP[8] == 2) {
-            BPS_out = 0;
-        } else if (CBP[0] > 0 && CBP[1] > 0 && CBP[4] > 0 && CBP[5] == 2 && CBP[6] > 0 && CBP[7] == 2 && CBP[8] > 0) {
-            BPS_out = 1;
-        } else if (CBP[0] == 0 && CBP[1] == 0 && CBP[4] == 0 && CBP[5] == 0 && CBP[6] == 0 && CBP[7] == 1 && CBP[8] == 0) {
-            BPS_out = 3;
-        } else if (CBP[0] == 0 && CBP[1] == 0 && CBP[4] == 0 && CBP[5] <= 1 && CBP[6] == 0 && CBP[7] == 0 && CBP[8] == 0) {
-            BPS_out = 2;
-        }
-         */
-        //        // BY MY    
+
+//        if (CBP[0] == 2 && CBP[3] == 1 && CBP[6] == 1 && CBP[7] == 2 && CBP[8] == 2 && CBP[9] == 2 && CBP[10] == 2) {
+//            BPS_out = 0;
+//        } else if (CBP[0] > 0 && CBP[3] > 0 && CBP[6] > 0 && CBP[7] == 2 && CBP[8] > 0 && CBP[9] == 2 && CBP[10] > 0) {
+//            BPS_out = 1;
+//        } else if (CBP[0] == 0 && CBP[3] == 0 && CBP[6] == 0 && CBP[7] == 0 && CBP[8] == 0 && CBP[9] == 0 && CBP[10] == 0) {
+//            BPS_out = 3;
+//        } else if (CBP[0] == 0 && CBP[3] == 0 && CBP[6] == 0 && CBP[7] >= 0 && CBP[8] >= 0 && CBP[9] <= 1 && CBP[10] == 0) {
+//            BPS_out = 2;
+//        }
+//
+//        if (CBP[0] == 2 && CBP[1] == 1 && CBP[4] == 1 && CBP[5] == 2 && CBP[6] == 2 && CBP[7] == 2 && CBP[8] == 2) {
+//            BPS_out = 0;
+//        } else if (CBP[0] > 0 && CBP[1] > 0 && CBP[4] > 0 && CBP[5] == 2 && CBP[6] > 0 && CBP[7] == 2 && CBP[8] > 0) {
+//            BPS_out = 1;
+//        } else if (CBP[0] == 0 && CBP[1] == 0 && CBP[4] == 0 && CBP[5] == 0 && CBP[6] == 0 && CBP[7] == 1 && CBP[8] == 0) {
+//            BPS_out = 3;
+//        } else if (CBP[0] == 0 && CBP[1] == 0 && CBP[4] == 0 && CBP[5] <= 1 && CBP[6] == 0 && CBP[7] == 0 && CBP[8] == 0) {
+//            BPS_out = 2;
+//        }
+//
+//        // BY MY    
 //        int CBP_57 = CBP[5] + CBP[7];
 //        if (CBP[0] == 2 && CBP[1] == 1 && CBP[4] == 1 && CBP[6] == 2 && CBP[8] == 2 && CBP_57 > 3) {
 //            BPS_out = 0;//strong evidence
@@ -1133,7 +1098,8 @@ public class VIC {
 //        } else {
 //            BPS_out = 3;//VUS
 //        }
-///BY HY
+//        
+        // BY HY
         int CBP_57 = CBP[5] + CBP[7];
         if (CBP[0] == 2 && CBP[1] == 1 && CBP[4] == 1 && CBP[6] == 2 && CBP[8] == 2 && CBP_57 > 3) {
             BPS_out = 0;
@@ -1170,6 +1136,7 @@ public class VIC {
         } else {
             cancer_type = "CANCER";
         }
+
         cancer_type = cancer_type.toUpperCase();
         int getr = Integer.parseInt(Funcanno_flgs.get("Gene").toString());
         String gene_tr = cls[getr];
@@ -1243,9 +1210,9 @@ public class VIC {
 
                 String cgi_list = (String) cgi_markers_dict.get(marker_key) + cgi_markers_dict.get(marker_key0) + cgi_markers_dict.get(marker_key00) + cgi_markers_dict.get(marker_key1)
                         + cgi_markers_dict.get(marker_key11) + cgi_markers_dict.get(marker_key2) + cgi_markers_dict.get(marker_key22);
-//                System.out.println("=====cgi_list is: "+cgi_list);
-//                System.out.println("=====###$$%add_list is "+add_list);
-//                System.out.println("=====###$$%cgi_list is "+cgi_list);
+//                System.out.println("=====cgi_list is: " + cgi_list);
+//                System.out.println("=====###$$%add_list is " + add_list);
+//                System.out.println("=====###$$%cgi_list is " + cgi_list);
                 String level_AB_tmp;    // = "0";
                 String level_CD_tmp;    // = "0";
                 int level_tmp;          // = 0;
@@ -1307,21 +1274,14 @@ public class VIC {
                             if (!cgidd[14].toUpperCase().contains(cancer_type)) {
                                 level_cancer = "1";
                                 level_CD_cancer = "1";
-//                                if (Integer.valueOf(level_CD_tmp) > Integer.valueOf(level_CD)) {
-//                                    level_CD = level_CD_tmp;
-//                                }
-//                                if (level_tmp > level) {
-//                                    level = level_tmp;
-//                                }
                             } else if (cgidd[14].toUpperCase().contains(cancer_type)) {
                                 level_cancer = "2";
                                 level_CD_cancer = "2";
                             }
+
                             if (Integer.valueOf(level_cancer) > level) {
                                 level = Integer.valueOf(level_cancer);
                             }
-//                            if () {
-//                            }
                         }
                     }
                     if (level_AB.equals("1")) {
@@ -1330,31 +1290,10 @@ public class VIC {
                 } catch (Exception e) {
                     System.out.println(e);
                 }
-//                try (InputStream in = new FileInputStream(add_markers)) {
-//                    byte[] b = new byte[in.available()];
-//                    in.read(b);
-//                    String[] pmkbline = new String(b).split("\n");
-//                    for (String i : add_list.split(",")) {
-//                        if (0 < i.length() && i.length() <= 8) {
-//                            int pos = Integer.parseInt(i);
-//                            String pmkbd = pmkbline[pos];
-//
-//                            String[] pmkbdd = pmkbd.split("\t");
-//                            System.out.println("=====pmkbdd is: " + Arrays.toString(pmkbdd));
-////                            thera_out = Arrays.toString(pmkbdd);
-//
-//                        }
-//                    }
-//
-//                } catch (Exception e) {
-//                    System.out.println(e);
-//                }
             }
-
         }
 
         return level;
-
     }
 
     public static String Check_Thera_out(String line, Map Funcanno_flgs) throws FileNotFoundException, IOException {
@@ -1386,8 +1325,7 @@ public class VIC {
         int erg = Integer.parseInt(Funcanno_flgs.get("ExonicFunc.refGene").toString());
         String exon_func = cls[erg];
 
-        String line_tmp = gene_tr + " " + func + " " + exon_func + " " + cancer_type;
-
+//        String line_tmp = gene_tr + " " + func + " " + exon_func + " " + cancer_type;
         int aarf = Integer.parseInt(Funcanno_flgs.get("AAChange.refGene").toString());
         String line_tmp2 = cls[aarf];
 
@@ -1446,17 +1384,10 @@ public class VIC {
 
                 String cgi_list = (String) cgi_markers_dict.get(marker_key) + cgi_markers_dict.get(marker_key0) + cgi_markers_dict.get(marker_key00) + cgi_markers_dict.get(marker_key1)
                         + cgi_markers_dict.get(marker_key11) + cgi_markers_dict.get(marker_key2) + cgi_markers_dict.get(marker_key22);
-//                System.out.println("=====cgi_list is: "+cgi_list);
-                String level_AB = "0";
-                String level_CD = "0";
+//                System.out.println("=====cgi_list is: " + cgi_list);
+//                String level_AB = "0";
+//                String level_CD = "0";
 
-//                for (String i : add_list.split(",")) {
-//
-//                    if (i.length() <= 8 && i.length() > 0) {
-//                        level_CD = "1";
-//                        level = 1;
-//                    }
-//                }
                 try (InputStream in = new FileInputStream(cgi_markers)) {
                     byte[] b = new byte[in.available()];
                     in.read(b);
@@ -1469,41 +1400,19 @@ public class VIC {
                             String[] cgidd = cgid.split("\t");
 //                            System.out.println("=====cgidd is: " + Arrays.toString(cgidd));
                             thera_out = Arrays.toString(cgidd);
-
                         }
                     }
-
                 } catch (Exception e) {
                     System.out.println(e);
                 }
-//                try (InputStream in = new FileInputStream(add_markers)) {
-//                    byte[] b = new byte[in.available()];
-//                    in.read(b);
-//                    String[] pmkbline = new String(b).split("\n");
-//                    for (String i : add_list.split(",")) {
-//                        if (0 < i.length() && i.length() <= 8) {
-//                            int pos = Integer.parseInt(i);
-//                            String pmkbd = pmkbline[pos];
-//
-//                            String[] pmkbdd = pmkbd.split("\t");
-//                            System.out.println("=====pmkbdd is: " + Arrays.toString(pmkbdd));
-//                            thera_out = Arrays.toString(pmkbdd);
-//
-//                        }
-//                    }
-//
-//                } catch (Exception e) {
-//                    System.out.println(e);
-//                }
             }
-
         }
 
         return thera_out;
     }
 
     public static int Check_Mut(String line, Map Funcanno_flgs, Map Allels_flgs, Map lof_genes_dict) {
-        /*Mutation type:
+        /* Mutation type:
          1 Activating, LOF (missense, nonsense, indel, splicing), CNVs, fusions
          1 Activating, LOF (missense, nonsense, indel, splicing), CNVs, fusions
          0 Functionally unknown; mostly missense, in-frame indels; less commonly,other types
@@ -1567,7 +1476,7 @@ public class VIC {
     }
 
     public static int Check_VF(String line, Map Funcanno_flgs, Map Alleles_flgs, Map lof_genes_dict) {
-        /*Variant frequencies
+        /* Variant frequencies
          1 Mostly mosaic
          1 Mostly mosaic
          0 Mosaic or nonmosaic
@@ -1578,18 +1487,19 @@ public class VIC {
     }
 
     public static int Check_PotG(String line, Map Funcanno_flgs, Map Alleles_flgs, Map lof_genes_dict) {
-        /*Potential germline
+        /* Potential germline
          Mostly nonmosaic (VAF approximately 50% or 100%)
          Mostly nonmosaic (VAF approximately 50% or 100%)
          Mostly nonmosaic (VAF approximately 50% or 100%)
          Mostly nonmosaic (VAF, approximately 50% or 100%)
          */
         int PotG = -1;
+
         return PotG;
     }
 
     public static int Check_PopD(String line, Map Freqs_flgs, Map Funcanno_flgs, Map Allels_flgs, Map lof_genes_dict) {
-        /*Population database: ESP, dbSNP, 1000Genome, ExAC
+        /* Population database: ESP, dbSNP, 1000Genome, ExAC
          1  Absent or extremely low MAF
          1  Absent or extremely low MAF
          1  Absent or extremely low MAF
@@ -1668,9 +1578,6 @@ public class VIC {
         int cos = Integer.parseInt(Funcanno_flgs.get("cosmic84_coding").toString());
         int icgc = Integer.parseInt(Funcanno_flgs.get("ICGC_Id").toString());
 
-//        if (!cls[cos].equals(".") && !cls[icgc].equals(".")) {
-//            SomD = 2;
-//        }
         if (!cls[cos].equals(".") || !cls[icgc].equals(".")) {
             SomD = 1;
         }
@@ -1683,7 +1590,7 @@ public class VIC {
         return SomD;
     }
 
-    //def check_PreP(line, Funcanno_flgs, Allels_flgs, lof_genes_dict)
+    // def check_PreP(line, Funcanno_flgs, Allels_flgs, lof_genes_dict)
     public static int Check_PreP(String line, Map Funcanno_flgs, Map Allels_flgs, Map lof_genes_dict) {
         /*
          Predictive software: SIFT, PolyPhen2, MutTaster, CADD, MetaSVM
@@ -1892,14 +1799,14 @@ public class VIC {
                 int ref = (int) Allels_flgs.get("Ref");
                 int alt = (int) Allels_flgs.get("Alt");
                 String keys = cls[chr] + "_" + cls[start] + "_" + cls[ref] + "_" + cls[alt];
-//                System.out.println("======target variant is "+ keys);
+//                System.out.println("======target variant is " + keys);
                 keys = keys.replaceAll("(?!)chr", "");
                 if (user_evidence_dict.get(keys) != null) {
                     String evds = (String) user_evidence_dict.get(keys.toUpperCase());
-//                    System.out.println("======evidence are: "+ evds);
+//                    System.out.println("======evidence are: " + evds);
                     for (String evd : evds.split(";")) {
                         String[] evd_t = evd.split("=");
-                        //System.out.println(evd_t[0]+" "+evd_t[1]);
+//                        System.out.println(evd_t[0] + " " + evd_t[1]);
                         switch (evd_t[0]) {
                             case "CBP0":
                                 CBP[0] = Integer.valueOf(evd_t[1]);
@@ -1961,7 +1868,7 @@ public class VIC {
         }
     }
 
-    //def my_inter_var_can(annovar_outfile):
+    // def my_inter_var_can(annovar_outfile):
     public static int My_Cancer_var_can(String _annovarfile) throws FileNotFoundException, IOException {
 
         String grlfile = _annovarfile + ".grl_p";
@@ -2059,7 +1966,7 @@ public class VIC {
                     String[] cls = line.split("\t");
                     String each_variant = cls[0] + "#" + cls[1] + "#" + cls[2] + "#" + cls[3] + "#" + cls[4];
                     each_variant = each_variant.replaceAll("(?i)chr", "");
-//                    System.out.println("variant is: "+ each_variant);
+//                    System.out.println("variant is: " + each_variant);
                     String civicdd = "";
                     if (civ_markers_dict.containsKey(each_variant)) {
                         civicdd = civ_markers_dict.get(each_variant).toString();
@@ -2083,27 +1990,25 @@ public class VIC {
                         } else {
                             clinvar_bp = ".";
                         }
-//                        System.out.println("=========Gene is:"+ cls[Funcanno_flgs.get("Gene")]+"===");
-                        //20190314 by MQY
+//                        System.out.println("=========Gene is:" + cls[Funcanno_flgs.get("Gene")] + "===");
+
+                        // 03142019 by MQY
                         String vic_bp = "";
                         if (knownlist.equals(" ")) {
                             if (clinvar_bp.equals(".") && cls[Funcanno_flgs.get("Gene")].equals(".") && cls[Funcanno_flgs.get("Func.refGene")].equals(".")) {
                                 vic_bp = ".";
-//                                break;
                             } else {
                                 vic_bp = Assign(BP, line, Freqs_flgs, Funcanno_flgs, Allels_flgs);
                             }
                         } else {
                             for (String known_variant : known_list) {
                                 if (known_variant.contains(each_variant)) {
-//                                    vic_bp = "User-specified as potential clinical significance";
-//                                      System.out.println("=="+ known_variant+"==");
+//                                    System.out.println("==" + known_variant + "==");
                                     vic_bp = "User-specified as " + known_variant.split("#")[5];
                                     break;
                                 }
                                 if (clinvar_bp.equals(".") && cls[Funcanno_flgs.get("Gene")].equals(".") && cls[Funcanno_flgs.get("Func.refGene")].equals(".")) {
                                     vic_bp = ".";
-//                                    break;
                                 } else {
                                     vic_bp = Assign(BP, line, Freqs_flgs, Funcanno_flgs, Allels_flgs);
                                 }
@@ -2122,12 +2027,11 @@ public class VIC {
 
                         String mim2 = null;
                         String ge = cls[Funcanno_flgs.get("Gene")];
-                        //System.out.println(Funcanno_flgs.get("ExonicFunc.refGene"));
+//                        System.out.println(Funcanno_flgs.get("ExonicFunc.refGene"));
                         String[] gee = ge.split(",");
                         for (String ggee : gee) {
                             if (mim2gene_dict2.containsKey(ggee)) {
                                 mim2 = mim2gene_dict2.get(ggee).toString();
-
                             } else {
                                 mim2 = ".";
                             }
@@ -2147,14 +2051,17 @@ public class VIC {
                         if ((mim1 != null) && (!mim1.equals("."))) {
                             OMIM = mim1;
                         }
+
                         if ((mim2 != null) && (!mim2.equals("."))) {
                             OMIM = mim2;
                         }
+
                         if (mim_pheno_dict.get(OMIM) == null) {
                             pheno_MIM = ".";
                         } else {
                             pheno_MIM = mim_pheno_dict.get(OMIM).toString();
                         }
+
                         String orpha_details = "";
                         String orpha_s = " ";
                         String ort3;
@@ -2169,17 +2076,21 @@ public class VIC {
                                 orpha_s = ort3 + orpha_s;
                             }
                         }
+
                         for (String ort4 : orpha_s.split(";")) {
                             if (ort4.length() > 0) {
                                 orpha_details = orpha_details + orpha_dict.get(ort4) + "~";
                             }
                         }
+
                         if (orpha_s.equals("")) {
                             orpha_s = ".";
                         }
+
                         if (orpha_details.equals("")) {
                             orpha_s = ".";
                         }
+
                         String thera_out;
                         thera_out = Check_Thera_out(line, Funcanno_flgs);
                         if (thera_out.equals("")) {
@@ -2217,7 +2128,7 @@ public class VIC {
                                     + Freq_ExAC_POPs + "\t" + Freq_gnomAD_exome_POPs + "\t" + OMIM + "\t" + pheno_MIM + "\t" + orpha_s + "\t" + orpha_details + "\t" + thera_out + "\t" + civicdd + "\n");
                         }
 
-                    }//else
+                    }
                     line_sum += 1;
                 }
             }
