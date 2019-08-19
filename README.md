@@ -13,8 +13,8 @@ VIC is a bioinformatics software tool for assessing clinical impacts of somatic 
 ## PREREQUISITE
 
 1. You need to install Java >= 1.8.
-2. You need to install [ANNOVAR] (http://annovar.openbioinformatics.org/en/latest/) version >=  2016-02-01.
-3. You need to download the latest version of the files such as mim2gene.txt from [OMIM] (http://www.omim.org/downloads); updated files could generate more accurate results while using VIC.
+2. You need to install [ANNOVAR](http://annovar.openbioinformatics.org/en/latest/) version >=  2016-02-01.
+3. You need to download the latest version of the files such as mim2gene.txt from [OMIM](http://www.omim.org/downloads); updated files could generate more accurate results while using VIC.
 
 ## OPTIONS
 
@@ -72,9 +72,6 @@ VIC is free for non-commercial use without warranty. Users need to obtain licens
 
 He MM, Li Q, Yan M, Cao H, Hu Y, He KY, Cao K, Li MM, Wang K. Variant Interpretation for Cancer (VIC): A Computational Tool for Assessing Clinical Impacts of Somatic Variants. Genome Medicine (Accepted).
 
-Li MM, Datto M, Duncavage EJ, Kulkarni S, Lindeman NI, Roy S, Tsimberidou AM, Vnencak-Jones CL, Wolff DJ, Younes A, Nikiforova MN. [Standards and Guidelines for the Interpretation and Reporting of Sequence Variants in Cancer: A Joint Consensus Recommendation of the Association for Molecular Pathology, American Society of Clinical Oncology, and College of American Pathologists](https://www.ncbi.nlm.nih.gov/pubmed/27993330). [Journal of Molecular Diagnostics, 2017 Jan;19(1):4-23. doi: 10.1016/j.jmoldx.2016.10.002](https://www.ncbi.nlm.nih.gov/pubmed/27993330).
-
-[HadoopCNV: A dynamic programming imputation algorithm to detect copy number variants from sequencing data](http://biorxiv.org/content/early/2017/04/05/124339)
-
+Li MM, Datto M, Duncavage EJ, Kulkarni S, Lindeman NI, Roy S, Tsimberidou AM, Vnencak-Jones CL, Wolff DJ, Younes A, Nikiforova MN. [Standards and Guidelines for the Interpretation and Reporting of Sequence Variants in Cancer: A Joint Consensus Recommendation of the Association for Molecular Pathology, American Society of Clinical Oncology, and College of American Pathologists](https://www.ncbi.nlm.nih.gov/pubmed/27993330). Journal of Molecular Diagnostics, 2017 Jan;19(1):4-23. [doi: 10.1016/j.jmoldx.2016.10.002](https://www.ncbi.nlm.nih.gov/pubmed/27993330).
 
 
