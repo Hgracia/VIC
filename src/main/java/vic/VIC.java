@@ -25,7 +25,7 @@ public class VIC {
     protected static String lof_genes, tableannovar, convert_annovar, annotatevariation, mim2gene, mim_pheno, mim_orpha;
     protected static String orpha, exclude_snps, cgi_markers, add_markers;
     protected static String knowgenecanonical, cgiline2;
-    protected static String cancer_pathway, cancers_genes, civic_markers, cancers_types, outfilename;
+    protected static String cancer_pathways, cancer_genes, civic_markers, cancer_types, outfilename;
 
     protected static Map paras = new HashMap();
 
@@ -44,9 +44,9 @@ public class VIC {
     protected static Map add_markers_dict = new HashMap();
     protected static Map cgi_markers_dict = new HashMap();
     protected static Map civ_markers_dict = new HashMap();
-    protected static Map cancer_pathway_dict = new HashMap();
-    protected static Map cancers_gene_dict = new HashMap();
-    protected static Map cancers_types_dict = new HashMap();
+    protected static Map cancer_pathways_dict = new HashMap();
+    protected static Map cancer_genes_dict = new HashMap();
+    protected static Map cancer_types_dict = new HashMap();
 
     protected static Map<String, Integer> Freqs_flgs = new HashMap<>();
     protected static Map<String, Integer> Funcanno_flgs = new HashMap<>();
@@ -163,10 +163,10 @@ public class VIC {
             exclude_snps = vicdb + "/ext.variants";
             cgi_markers = vicdb + "/cgi_biomarkers_20180117.txt";
             add_markers = vicdb + "/add_marker.full.txt";
-            cancer_pathway = vicdb + "/cancer_pathway.list";
-            cancers_genes = vicdb + "/cancers_genes.list";
+            cancer_pathways = vicdb + "/cancer_pathways.list";
+            cancer_genes = vicdb + "/cancer_genes.list";
             civic_markers = vicdb + "/civic_2019_06.txt";//BY MQY
-            cancers_types = vicdb + "/vic.cancer.types";
+            cancer_types = vicdb + "/vic.cancer.types";
         } else {
             vicdb = "./vicdb";
             lof_genes = vicdb + "/LOF.genes.exac_me_cancers";
@@ -178,10 +178,10 @@ public class VIC {
             exclude_snps = vicdb + "/ext.variants";
             cgi_markers = vicdb + "/cgi_biomarkers_20180117.txt";
             add_markers = vicdb + "/add_marker.full.txt";
-            cancer_pathway = vicdb + "/cancer_pathway.list";
-            cancers_genes = vicdb + "/cancers_genes.list";
+            cancer_pathways = vicdb + "/cancer_pathways.list";
+            cancer_genes = vicdb + "/cancer_genes.list";
             civic_markers = vicdb + "/civic_2019_06.txt";
-            cancers_types = vicdb + "/vic.cancer.types";
+            cancer_types = vicdb + "/vic.cancer.types";
         }
         paras.put("vicdb", vicdb);
 
@@ -785,48 +785,48 @@ public class VIC {
             System.exit(0);
         }
 
-        // 11. cancer_pathway=%(database_vic)s/cancer_pathway.list
+        // 11. cancer_pathways=%(database_vic)s/cancer_pathways.list
         try {
-            File Cancerpathway = new File(cancer_pathway);
-            try (BufferedReader reader_cancer_pathway = new BufferedReader(new FileReader(Cancerpathway))) {
+            File Cancerpathway = new File(cancer_pathways);
+            try (BufferedReader reader_cancer_pathways = new BufferedReader(new FileReader(Cancerpathway))) {
                 String line2;
-                while ((line2 = reader_cancer_pathway.readLine()) != null) {
+                while ((line2 = reader_cancer_pathways.readLine()) != null) {
                     String[] cls2 = line2.split("\t");
                     key = cls2[0];
                     value = "1";
-                    cancer_pathway_dict.put(key, value);
+                    cancer_pathways_dict.put(key, value);
                 }
             }
 
         } catch (IOException e) {
-            System.out.printf("!!Error: can\\'t read the cancer_pathway genes file %s", cancer_pathway);
+            System.out.printf("!!Error: can\\'t read the cancer_pathways genes file %s", cancer_pathways);
             System.out.println("!!Error: Please download it from the source website");
             System.exit(0);
         }
 
-        // 12. cancers_genes.list
+        // 12. cancer_genes.list
         try {
-            File cancersgenes = new File(cancers_genes);
-            try (BufferedReader reader_cancers_genes = new BufferedReader(new FileReader(cancersgenes))) {
+            File cancergenes = new File(cancer_genes);
+            try (BufferedReader reader_cancer_genes = new BufferedReader(new FileReader(cancergenes))) {
                 String line2;
-                while ((line2 = reader_cancers_genes.readLine()) != null) {
+                while ((line2 = reader_cancer_genes.readLine()) != null) {
                     String[] cls2 = line2.split("\t");
                     key = cls2[0];
                     value = "1";
-                    cancers_gene_dict.put(key, value);
+                    cancer_genes_dict.put(key, value);
 
                 }
             }
 
         } catch (IOException e) {
-            System.out.printf("!!Error: can\\'t read the cancers diseases genes file %s \n", cancers_genes);
+            System.out.printf("!!Error: can\\'t read the cancer gene file %s \n", cancer_genes);
             System.out.println("!!Error: Please download it from the source website");
             System.exit(0);
         }
 
         // 13. VIC.cancer.types
         try {
-            File cancertype = new File(cancers_types);
+            File cancertype = new File(cancer_types);
             try (BufferedReader reader_cancertype = new BufferedReader(new FileReader(cancertype))) {
                 String line2;
                 while ((line2 = reader_cancertype.readLine()) != null) {
@@ -834,12 +834,12 @@ public class VIC {
                     key = cls2[1];
                     value = cls2[0];
 //                    System.out.println("key and value of cancer types: " + key + "==" + value);
-                    cancers_types_dict.put(key, value);
+                    cancer_types_dict.put(key, value);
                 }
             }
 
         } catch (IOException e) {
-            System.out.printf("!!Error: can\\'t read the cancer_pathway genes file %s \n", cancers_types);
+            System.out.printf("!!Error: can\\'t read the cancer_pathways genes file %s \n", cancer_types);
             System.out.println("!!Error: Please download it from the source website");
             System.exit(0);
         }
@@ -1728,14 +1728,14 @@ public class VIC {
         int getr = Integer.parseInt(Funcanno_flgs.get("Gene").toString());
         String gene_tr = cls[getr];
 
-        if (cancer_pathway_dict.containsKey(gene_tr)) {
-            if (cancer_pathway_dict.get(gene_tr) == "1") {
+        if (cancer_pathways_dict.containsKey(gene_tr)) {
+            if (cancer_pathways_dict.get(gene_tr) == "1") {
                 Path = 1;
             }
         }
 
-        if (cancers_gene_dict.containsKey(gene_tr)) {
-            if (cancers_gene_dict.get(gene_tr) == "1") {
+        if (cancer_genes_dict.containsKey(gene_tr)) {
+            if (cancer_genes_dict.get(gene_tr) == "1") {
                 Path = 2;
             }
         }
