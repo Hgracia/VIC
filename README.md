@@ -70,7 +70,7 @@ VIC is free for non-commercial use without warranty. Users need to obtain licens
 
 ## REFERENCE
 
-He MM, Li Q, Yan M, Cao H, Hu Y, He KY, Cao K, Li MM, Wang K. Variant Interpretation for Cancer (VIC): A Computational Tool for Assessing Clinical Impacts of Somatic Variants. <i>Genome Medicine</i>, 2019 (in press).
+He MM, Li Q, Yan M, Cao H, Hu Y, He KY, Cao K, Li MM, Wang K. [Variant Interpretation for Cancer (VIC): A Computational Tool for Assessing Clinical Impacts of Somatic Variants](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-019-0664-4). <i>Genome Medicine</i>, 2019 [doi:10.1186/s13073-019-0664-4](https://genomemedicine.biomedcentral.com/articles/10.1186/s13073-019-0664-4).
 
 Li MM, Datto M, Duncavage EJ, Kulkarni S, Lindeman NI, Roy S, Tsimberidou AM, Vnencak-Jones CL, Wolff DJ, Younes A, Nikiforova MN. [Standards and Guidelines for the Interpretation and Reporting of Sequence Variants in Cancer: A Joint Consensus Recommendation of the Association for Molecular Pathology, American Society of Clinical Oncology, and College of American Pathologists](https://www.ncbi.nlm.nih.gov/pubmed/27993330). <i>Journal of Molecular Diagnostics</i>, 2017 Jan;19(1):4-23. [doi:10.1016/j.jmoldx.2016.10.002](https://www.ncbi.nlm.nih.gov/pubmed/27993330).
 
