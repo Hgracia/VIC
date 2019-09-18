@@ -55,6 +55,10 @@ public class VIC {
     protected static String[] add_d, civ_d;
     protected static String[] cgi_d;
     protected static List<String> known_list = new ArrayList<>();
+    protected static String cosmicVersion = "cosmic84_coding";
+    protected static String dbnsfpVersion = "dbnsfp35a";
+    protected static String clinvarVersion = "clinvar_20190305";
+    protected static String gnomadVersion = "gnomad211_exome";
 
     /**
      * @param args the command line arguments
@@ -854,8 +858,8 @@ public class VIC {
             System.out.printf("==Warning:the folder of %s is already created!\n", humandbpath);
         }
 
-        // MY: updated to dbnsf35a, clinvar_20190305, gnomad211_exome
-        String ds = "refGene esp6500siv2_all 1000g2015aug avsnp150 dbnsfp35a clinvar_20190305 exac03 dbscsnv11 dbnsfp31a_interpro ensGene knownGene cosmic84_coding icgc21 gnomad211_exome";
+        // MY: updated to dbnsfp35a, clinvar_20190305, gnomad211_exome
+        String ds = "refGene esp6500siv2_all 1000g2015aug avsnp150 " + dbnsfpVersion + " " + clinvarVersion + " exac03 dbscsnv11 dbnsfp31a_interpro ensGene knownGene " + cosmicVersion + " icgc21 " + gnomadVersion + "";
         for (String dbs : ds.split(" ")) {
             String file_name = dbs;
             if (dbs.equals("1000g2015aug")) {
@@ -937,8 +941,8 @@ public class VIC {
         switch (inputtype.toLowerCase()) {
             case "avinput": {
                 cmd = "perl " + tableannovar + " " + inputfile + " " + database_humandb + " -buildver " + buildver + "  -outfile " + outputfile
-                        + " -remove -protocol refGene,ensGene,knownGene,esp6500siv2_all,1000g2015aug_all,exac03,avsnp150,dbnsfp35a,dbscsnv11,"
-                        + "dbnsfp31a_interpro,clinvar_20190305,cosmic84_coding,icgc21,gnomad211_exome  -operation  g,g,g,f,f,f,f,f,f,f,f,f,f,f  -nastring .  " + annovar_options;
+                        + " -remove -protocol refGene,ensGene,knownGene,esp6500siv2_all,1000g2015aug_all,exac03,avsnp150," + dbnsfpVersion + ",dbscsnv11,"
+                        + "dbnsfp31a_interpro," + clinvarVersion + "," + cosmicVersion + ",icgc21," + gnomadVersion + "  -operation  g,g,g,f,f,f,f,f,f,f,f,f,f,f  -nastring .  " + annovar_options;
                 System.out.println(cmd);
                 Process process = Runtime.getRuntime().exec(cmd);
                 System.getProperty(cmd);
@@ -947,8 +951,8 @@ public class VIC {
             }
             case "vcf": {
                 cmd = "perl " + tableannovar + " " + inputfile + ".avinput " + database_humandb + " -buildver " + buildver + " -remove -out " + outputfile
-                        + " -protocol refGene,ensGene,knownGene,esp6500siv2_all,1000g2015aug_all,exac03,avsnp150,dbnsfp35a,dbscsnv11,"
-                        + "dbnsfp31a_interpro,clinvar_20190305,cosmic84_coding,icgc21,gnomad211_exome  -operation  g,g,g,f,f,f,f,f,f,f,f,f,f,f  -nastring . " + annovar_options;
+                        + " -protocol refGene,ensGene,knownGene,esp6500siv2_all,1000g2015aug_all,exac03,avsnp150," + dbnsfpVersion + ",dbscsnv11,"
+                        + "dbnsfp31a_interpro," + clinvarVersion + "," + cosmicVersion + ",icgc21," + gnomadVersion + "  -operation  g,g,g,f,f,f,f,f,f,f,f,f,f,f  -nastring . " + annovar_options;
                 System.out.println(cmd);
                 Process process = Runtime.getRuntime().exec(cmd);
                 System.getProperty(cmd);
@@ -976,8 +980,8 @@ public class VIC {
                     System.out.printf("INFO: Begin to annotate sample file of %s ....", f1);
                     String new_outfile = f1.replaceAll(".avinput", "");
                     cmd = "perl " + tableannovar + " " + opath + f1 + " " + database_humandb + " -buildver " + buildver + " -out " + opath + new_outfile
-                            + " -remove -protocol  refGene,ensGene,knownGene,esp6500siv2_all,1000g2015aug_all,exac03,avsnp150,dbnsfp35a,dbscsnv11,"
-                            + "dbnsfp31a_interpro,clinvar_20190305,cosmic84_coding,icgc21,gnomad211_exome  -operation  g,g,g,f,f,f,f,f,f,f,f,f,f,f    -nastring . " + annovar_options;
+                            + " -remove -protocol  refGene,ensGene,knownGene,esp6500siv2_all,1000g2015aug_all,exac03,avsnp150," + dbnsfpVersion + ",dbscsnv11,"
+                            + "dbnsfp31a_interpro," + clinvarVersion + "," + cosmicVersion + ",icgc21," + gnomadVersion + "  -operation  g,g,g,f,f,f,f,f,f,f,f,f,f,f    -nastring . " + annovar_options;
                     System.out.println(cmd);
                     Process process = Runtime.getRuntime().exec(cmd);
                     System.getProperty(cmd);
@@ -1510,7 +1514,7 @@ public class VIC {
         int PopD = 0;
 
         String[] cls = line.split("\t");
-        String[] Freqs_4pops = {"1000g2015aug_all", "esp6500siv2_all", "ExAC_ALL", "AF"};//AF in gnomad211_exome
+        String[] Freqs_4pops = {"1000g2015aug_all", "esp6500siv2_all", "ExAC_ALL", "AF"};//AF in gnomAD
         int tt = 1;
 
         for (String kkey : Freqs_4pops) {
@@ -1575,7 +1579,7 @@ public class VIC {
          */
         int SomD = 0;
         String[] cls = line.split("\t");
-        int cos = Integer.parseInt(Funcanno_flgs.get("cosmic84_coding").toString());
+        int cos = Integer.parseInt(Funcanno_flgs.get(cosmicVersion).toString());
         int icgc = Integer.parseInt(Funcanno_flgs.get("ICGC_Id").toString());
 
         if (!cls[cos].equals(".") || !cls[icgc].equals(".")) {
@@ -1919,7 +1923,7 @@ public class VIC {
         Funcanno_flgs.put("AAChange.ensGene", 0);
         Funcanno_flgs.put("AAChange.knownGene", 0);
         Funcanno_flgs.put("MetaSVM_score", 0);
-        Funcanno_flgs.put("cosmic84_coding", 0);
+        Funcanno_flgs.put(cosmicVersion, 0);
         Funcanno_flgs.put("ICGC_Id", 0);
         Funcanno_flgs.put("ICGC_Occurrence", 0);
         Funcanno_flgs.put("Otherinfo", 0);
