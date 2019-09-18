@@ -86,6 +86,11 @@ public class VIC {
         options.addOption("l", "user_specified_list", true, "User specified variant list with self-designated clinical impact significance, must be in AVinput format");
         options.addOption("cancer_type", true, "Please check the 'vic.cancer.types' in vicdb for available cancer types. All the cancer types should be in the shout-cut form, e.g.:AA. Or include cancer types in the otherinfo column of the AVinput");
 
+        options.addOption("cosmic", "cosmic_version", true, "User specified cosmic version");
+        options.addOption("dbnsfp", "dbnsfp_version", true, "User specified dbnsfp version");
+        options.addOption("clinvar", "clinvar_version", true, "User specified clinvar version");
+        options.addOption("gnomad", "gnomad_version", true, "User specified gnomad version");
+
         // Annovar Options, Caution: check these options from manual of Annovar
         options.addOption("table_annovar", true, "<path>The Annovar perl script of table_annovar.pl");
         options.addOption("convert2annovar", true, "<path>The Annovar perl script of convert2annovar.pl");
@@ -140,6 +145,33 @@ public class VIC {
         } else {
             cancer_type = option.getOptionValue("cancer_type");
             paras.put("cancer_type", cancer_type);
+        }
+
+        if (option.hasOption("cosmic")) {
+            cosmicVersion = option.getOptionValue("cosmic_version");
+            if (cosmicVersion.lastIndexOf("_coding") < 0) {
+                cosmicVersion += "_coding";
+            }
+        } else {
+            cosmicVersion = "cosmic84_coding";
+        }
+
+        if (option.hasOption("dbnsfp")) {
+            dbnsfpVersion = option.getOptionValue("dbnsfp_version");
+        } else {
+            dbnsfpVersion = "dbnsfp35a";
+        }
+
+        if (option.hasOption("clinvar")) {
+            clinvarVersion = option.getOptionValue("clinvar_version");
+        } else {
+            clinvarVersion = "clinvar_20190305";
+        }
+
+        if (option.hasOption("gnomad")) {
+            gnomadVersion = option.getOptionValue("gnomad_version");
+        } else {
+            gnomadVersion = "gnomad211_exome";
         }
 
         if (option.hasOption("b")) {
