@@ -53,6 +53,14 @@ java -jar target/VIC-1.0-jar-with-dependencies.jar [-b ] [-d ] [-h] [-input_type
 -skip_annovar Skip the Annovar annotation, this can be true only after you already got the annovar's annotation result
 
 -table_annovar The Annovar perl script of table_annovar.pl
+
+-cosmic,--cosmic_version User specified cosmic version
+
+-dbnsfp,--dbnsfp_version User specified dbnsfp version
+
+-clinvar,--clinvar_version User specified clinvar version
+
+-gnomad,--gnomad_version User specified gnomad version
 ```
 ## EXAMPLE
 ```
